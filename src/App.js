@@ -1,26 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState, useEffect} from "react";
+import DashBoard from "./general/pages/DashBoard";
+import LoginComponent from "./general/auth/Login";
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default function App() {
+    const [user, setUser] = useState(null);
+    const [state, setState] = useState({collapsed: false, user: null});
 
-export default App;
+
+    const logout = () => {
+        sessionStorage.removeItem('userProfile',);
+        setUser(null);
+    }
+
+    const refreshUser = (data) => {
+        data.Authorization=`Bearer ${data.access_token}`
+        sessionStorage.setItem('userProfile', JSON.stringify(data));
+        setUser(data);
+    }
+
+
+    useEffect(() => {
+        if (sessionStorage.getItem('userProfile')) {
+            setUser(JSON.parse(sessionStorage.getItem('userProfile')));
+        }
+
+    }, []);
+
+
+    const onCollapse = collapsed => {
+        setState({collapsed});
+    };
+
+    if (!user || user === {}) {
+        return (
+            <LoginComponent
+                setUser={refreshUser}
+                state={state}
+                onCollapse={onCollapse}
+                user={
+                    user
+                }/>
+        );
+    }
+
+    return <DashBoard state={state}
+                      onCollapse={onCollapse}
+                      logout={logout}
+                      user={
+                          user
+                      }/>;
+}
