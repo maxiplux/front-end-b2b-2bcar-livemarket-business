@@ -1,0 +1,35 @@
+name: Node.js CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install yarn
+    - run: yarn
+    - run: npm run build
+    - run: git config --global user.email "maxiplux@gmail.com"
+    - run: git config --global user.name "Juan"
+    - run: git add .
+
+
+    - run: git commit -m 'Some descriptive commit message'
+    - run: git push origin master
+    - run: git checkout gh-pages 
+    - run: git rebase master
+    - run: git push origin gh-pages
+    - run: git checkout master
+      env:
+        CI: true
