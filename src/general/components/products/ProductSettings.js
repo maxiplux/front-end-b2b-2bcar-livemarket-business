@@ -3,44 +3,45 @@ import {Button} from 'antd';
 import {Link} from "react-router-dom";
 
 const ProductSettings = {
-    productColumns: [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'price',
-            dataIndex: 'price',
-            key: 'price',
-        },
-        {
-            title: 'category',
-            dataIndex: 'category.name',
-            key: 'category',
-        },
+    productColumns: ( context={}) => {
 
-        {
-            title: 'Action',
-            key: 'action',
-            render: (context) => {
-                const currentItemEdit = `/products/edit/${context.id}/`
-                const currentItemDelete = `/products/delete/${context.id}/`
-
-                return (<>
-
-                    <Link to={currentItemDelete}>
-                        <Button type="primary">Delete</Button>
-                    </Link>
-
-                    <Link to={currentItemDelete}>
-                        <Button type="danger">Edit</Button>
-                    </Link>
-
-                </>);
+       return [
+            {
+                title: 'Name',
+                dataIndex: 'name',
+                key: 'name',
             },
-        }
-    ]
+            {
+                title: 'price',
+                dataIndex: 'price',
+                key: 'price',
+            },
+            {
+                title: 'category',
+                dataIndex: 'category.name',
+                key: 'category',
+            },
+
+            {
+                title: 'Action',
+                key: 'action',
+                render: (rowContext) => {
+
+
+                    return (<>
+
+
+                            <Button key={rowContext.id} type="primary" onClick={() => context.setCurrentContext({action:'delete',objectGoal:rowContext}) }>Delete</Button>
+
+                            <Button key={rowContext.id} type="danger" onClick={() => context.setCurrentContext({action:'edit',objectGoal:rowContext}) }>Edit</Button>
+
+
+                    </>);
+                },
+            }
+        ];
+
+    }
 }
 
 export default ProductSettings;

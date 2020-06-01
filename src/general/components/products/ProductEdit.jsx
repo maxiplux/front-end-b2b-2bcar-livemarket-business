@@ -1,81 +1,117 @@
-import React, {useEffect, useState} from 'react';
-import {AutoComplete, Button, Form, Input, Select} from 'antd';
-import {useParams} from "react-router-dom";
-
+import React, {createRef, useEffect, useState} from 'react';
+import {Button, Form, Input, InputNumber, Layout} from 'antd';
 import ProductServices from "../../../services/products/ProductServices";
-import PlaceHolder from "../../shares/PlaceHolder";
-
-const {Option} = Select;
-const AutoCompleteOption = AutoComplete.Option;
-
-export default  function ProductEdit  (props) {
-
-    let {id} = useParams();
+const {Header, Footer, Content} = Layout;
 
 
-    const handleSubmit = e => {
-        e.preventDefault();
-        props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-            }
-        });
-    };
+export default function ProductEdit(props) {
 
-    const [dataSource, setDataSource] = useState({});
-    const formLayout = 'horizontal';
-    const formItemLayout = {labelCol: {span: 4}, wrapperCol: {span: 14}};
-    const buttonItemLayout = {
-        wrapperCol: {span: 14, offset: 4},
-    };
+    const [currentContext, setCurrentContext] = useState({ name:'jjuan' });
+    const [form] = Form.useForm();
+    const formRef = createRef();
+
+
 
     useEffect(() => {
-        if (id) {
+        if (props?.context?.currentContext?.objectGoal)
+        {
 
-            ProductServices.getEdit(props.user.Authorization, id).then(response => {
+            form.setFieldsValue(props.context.currentContext.objectGoal);
 
-                setDataSource(response.data);
-            });
 
         }
 
 
-    }, [id]);
+    }, [props?.context?.currentContext?.objectGoal]);
 
-    return (<>
+    const layout = {
+        labelCol: {
+            span: 4,
+        },
+        wrapperCol: {
+            span: 16,
+        },
+    };
+    const validateMessages = {
+        required: '${label} is required!',
+        types: {
+            email: '${label} is not validate email!',
+            number: '${label} is not a validate number!',
+        },
+        number: {
+            range: '${label} must be between ${min} and ${max}',
+        },
+    };
+
+    const onFinish = values => {
+        console.log(values);
+    };
+
+    return (
+        <Content
+            style={{
+                margin: '24px 18px',
+                padding: 0,
+                background: '#fff',
+                minHeight: 280,
+            }}
+        >
+            <h1> {currentContext.name}  </h1>
+        <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}
 
 
-        <PlaceHolder>
-            <Form layout={formLayout} onSubmit={handleSubmit}>
+              form={form}
+        >
+            <Form.Item
+                name={'name'}
+                label="Name"
+                rules={[
+                    {
+                        required: true,
+                    },
+                ]}
+            >
+                <Input/>
+            </Form.Item>
+            <Form.Item
+                name={['user', 'email']}
+                label="Email"
+                rules={[
+                    {
+                        type: 'email',
+                    },
+                ]}
+            >
+                <Input/>
+            </Form.Item>
+            <Form.Item
+                name={['user', 'age']}
+                label="Age"
+                rules={[
+                    {
+                        type: 'number',
+                        min: 0,
+                        max: 99,
+                    },
+                ]}
+            >
+                <InputNumber/>
+            </Form.Item>
+            <Form.Item name={['user', 'website']} label="Website">
+                <Input/>
+            </Form.Item>
+            <Form.Item name={['user', 'introduction']} label="Introduction">
+                <Input.TextArea/>
+            </Form.Item>
+            <Form.Item wrapperCol={{...layout.wrapperCol, offset: 8}}>
+                <Button type="primary" htmlType="submit">
+                    Submit
+                </Button>
+            </Form.Item>
+        </Form>
+        </Content>
+    );
 
-                <Form.Item name="name" {...formItemLayout} rules={[{ required: true, message: "Please type name!" }]}>
-                    <Input placeholder="Please input   name"/>
-                </Form.Item>
-
-                    <Select name="Category"  placeholder="Please select a country">
-                        <Option value="china">China</Option>
-                        <Option value="usa">U.S.A</Option>
-                    </Select>,
-
-
-                <Form.Item name="quality" {...formItemLayout}   rules={[{ required: true, message: "Please type quality!" }]} >
-                     <Input placeholder="Please input quality"/>
-                </Form.Item>
-
-
-                <Form.Item name="price" {...formItemLayout} rules={[{ required: true , message: 'Please input your price'}]}>
-                    <Input placeholder="Please input your price"/>
-                </Form.Item>
-
-
-                <Form.Item {...buttonItemLayout}>
-                    <Button type="primary" htmlType="submit">Submit</Button>
-                </Form.Item>
-            </Form>
-        </PlaceHolder>
-
-
-    </>);
 }
 
 

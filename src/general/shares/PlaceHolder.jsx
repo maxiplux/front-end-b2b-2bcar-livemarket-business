@@ -5,27 +5,21 @@ const {Header, Footer, Content} = Layout;
 
 const PlaceHolder = (props) => {
 
-    return (<>
+    return (
 
-        <Layout>
-            <Header>
-
-            </Header>
-            <Content
-                style={{
-                    margin: '24px 16px',
-                    padding: 24,
-                    background: '#fff',
-                    minHeight: 280,
-                }}
-            >
-                <Row>
-                    <Col span={5}></Col>
-                    <Col span={18}>{props.children}</Col>
-                </Row>
-            </Content>
-        </Layout>
-
-    </>);
+        <Content
+            style={{
+                margin: '24px 18px',
+                padding: 0,
+                background: '#fff',
+                minHeight: 280,
+            }}
+        >
+            <Row>
+                <Col span={10} aling={'left'}>{props.editCrudComponent}</Col>
+                <Col span={14}>{props.listTable}</Col>
+            </Row>
+        </Content>
+ );
 }
 export default PlaceHolder;

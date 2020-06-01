@@ -4,12 +4,15 @@ import { Table, Divider, Tag,Form, Icon, Input, Button, Checkbox,Row, Col,Modal 
 import ProductServices from "../../../services/products/ProductServices";
 import PlaceHolder from "../../shares/PlaceHolder";
 import ProductSettings from "./ProductSettings";
+import ProductEdit from "./ProductEdit";
 
 
 
 
 const ProductList = (props)=> {
     const [dataSource, setDataSource] = useState([]);
+    const [currentContext, setCurrentContext] = useState({});
+
 
 
     useEffect(() => {
@@ -26,10 +29,14 @@ const ProductList = (props)=> {
 
     }, [props.user]);
 
+
+    const listTable=<Table dataSource={dataSource} columns={ProductSettings.productColumns({currentContext,setCurrentContext})}   />;
+    const editCrudComponent=<ProductEdit dataSource={dataSource.map( data=> { return {...data, key:data.id }} )} context={{currentContext:currentContext,setCurrentContext:setCurrentContext}}   />;
     return (
-        <PlaceHolder >
-            <Table dataSource={dataSource} columns={ProductSettings.productColumns} />
-        </PlaceHolder>
+        <PlaceHolder listTable={listTable}  editCrudComponent={editCrudComponent}  />
+
+
+
     )
 }
 
